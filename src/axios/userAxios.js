@@ -1,14 +1,14 @@
-import axios from 'axios';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-
-const API = axios.create({ baseURL: 'http://localhost:8000' });
+import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+// thanks
+const API = axios.create({ baseURL: "http://localhost:8000" });
 
 export const authenticate = createAsyncThunk(
-  'authenticate',
+  "authenticate",
   async (username) => {
     try {
-      const response = await API.post('/api/authenticate', username);
-      console.log(response.data, 'authenticated successfully');
+      const response = await API.post("/api/authenticate", username);
+      console.log(response.data, "authenticated successfully");
       return response.status;
     } catch (error) {
       console.log({ error: error.message });
@@ -17,22 +17,22 @@ export const authenticate = createAsyncThunk(
   }
 );
 
-export const registerApi = createAsyncThunk('registerApi', async (post) => {
+export const registerApi = createAsyncThunk("registerApi", async (post) => {
   try {
-    const response = await API.post('/api/register', post);
+    const response = await API.post("/api/register", post);
     console.log(response.data.result);
     return response.data;
   } catch (error) {
     if (error.response.status === 409) {
-      console.log('you are already registered');
+      console.log("you are already registered");
     } else {
-      console.log('error occurred while registering');
+      console.log("error occurred while registering");
     }
   }
 });
 
 export const getUserDetails = createAsyncThunk(
-  'getUserDetails',
+  "getUserDetails",
   async (username) => {
     try {
       const response = await API.get(`/api/user/${username}`);
@@ -40,17 +40,17 @@ export const getUserDetails = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log(error.message);
-      return { error: 'User Data Is Not In Data Collection' };
+      return { error: "User Data Is Not In Data Collection" };
     }
   }
 );
 
 export const loginApi = createAsyncThunk(
-  'loginApi',
+  "loginApi",
   async ({ username, password }) => {
     console.log(username, password);
     try {
-      const response = await API.post('/api/login', { username, password });
+      const response = await API.post("/api/login", { username, password });
       // console.log(response.data);
       return response.data;
     } catch (error) {
@@ -60,13 +60,13 @@ export const loginApi = createAsyncThunk(
 );
 
 export const updateUserToken = createAsyncThunk(
-  'updateUserToken',
+  "updateUserToken",
   async (updateCredentials) => {
     console.log(updateCredentials);
     try {
-      let token = await JSON.parse(localStorage.getItem('token')).token;
-      console.log(token, 'axios to server');
-      const response = await API.put('/api/updateuser', updateCredentials, {
+      let token = await JSON.parse(localStorage.getItem("token")).token;
+      console.log(token, "axios to server");
+      const response = await API.put("/api/updateuser", updateCredentials, {
         headers: { authorization: `Bearer ${token}` },
       });
       console.log(response.data);
@@ -77,13 +77,13 @@ export const updateUserToken = createAsyncThunk(
   }
 );
 
-export const generateOTP = createAsyncThunk('generateOTP', async (username) => {
-  console.log(username, 'axis');
+export const generateOTP = createAsyncThunk("generateOTP", async (username) => {
+  console.log(username, "axis");
   try {
     const {
       data: { code },
       status,
-    } = await API.get('/api/generateOTP', {
+    } = await API.get("/api/generateOTP", {
       params: { username },
     });
     console.log(code, status);
@@ -95,8 +95,8 @@ export const generateOTP = createAsyncThunk('generateOTP', async (username) => {
       } = await API.get(`/api/user/${username}`);
       console.log(email);
       let text = `Hi this is marudhupandiyan from your one of the buddyz list This is your ${code}`;
-      let subject = 'marudhupandiyan sent to mail for OTP';
-      const verifyResponse = await API.post('/api/registerEmail', {
+      let subject = "marudhupandiyan sent to mail for OTP";
+      const verifyResponse = await API.post("/api/registerEmail", {
         username,
         userEmail: email,
         text,
@@ -111,9 +111,9 @@ export const generateOTP = createAsyncThunk('generateOTP', async (username) => {
 });
 
 export const verifyOTP = createAsyncThunk(
-  'verifyOTP',
+  "verifyOTP",
   async (username, { code }) => {
-    const response = await API.get('/api/verifyOTP', {
+    const response = await API.get("/api/verifyOTP", {
       params: username,
       code,
     });
@@ -123,11 +123,11 @@ export const verifyOTP = createAsyncThunk(
 );
 
 export const resetPassword = createAsyncThunk(
-  'resetPassword',
+  "resetPassword",
   async (username, password) => {
     console.log(username, password);
     try {
-      const response = await API.put('/api/resetPassword', username, password);
+      const response = await API.put("/api/resetPassword", username, password);
       console.log(response);
       return response.data;
     } catch (error) {
